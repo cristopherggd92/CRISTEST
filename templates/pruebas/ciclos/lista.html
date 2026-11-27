@@ -1,0 +1,19 @@
+{% extends "pruebas/_seccion.html" %}
+{% block tabla %}
+<table class="tabla">
+  <thead><tr><th>Código</th><th>Nombre</th><th>Plan</th><th>Versión</th><th>Entorno</th><th>Estatus</th><th>Progreso</th></tr></thead>
+  <tbody>
+  {% for ciclo in elementos %}
+    <tr>
+      <td class="mono"><a href="{% url 'pruebas:detalle' 'ciclos' ciclo.pk %}">{{ ciclo.codigo }}</a></td>
+      <td><a class="enlace-fila" href="{% url 'pruebas:detalle' 'ciclos' ciclo.pk %}">{{ ciclo.nombre }}</a></td>
+      <td class="texto-tenue">{{ ciclo.plan.nombre|default:"—" }}</td>
+      <td class="mono">{{ ciclo.version|default:"—" }}</td>
+      <td>{{ ciclo.entorno.nombre|default:"—" }}</td>
+      <td>{% include "pruebas/_insignia.html" with e=ciclo.estatus %}</td>
+      <td class="nowrap">{% include "pruebas/ciclos/_progreso.html" with p=ciclo.progreso %}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

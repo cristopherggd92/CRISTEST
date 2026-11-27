@@ -1,0 +1,14 @@
+<li class="paso paso-form">
+  <span class="paso-numero"></span>
+  <div class="paso-cuerpo rejilla-pasos">
+    {{ f.id }}{{ f.orden }}
+    <div class="campo{% if f.accion.errors %} con-error{% endif %}"><label for="{{ f.accion.id_for_label }}">Acción</label>{{ f.accion }}{% for e in f.accion.errors %}<small class="error">{{ e }}</small>{% endfor %}</div>
+    <div class="campo"><label for="{{ f.datos.id_for_label }}">Datos de prueba</label>{{ f.datos }}</div>
+    <div class="campo{% if f.resultado_esperado.errors %} con-error{% endif %}"><label for="{{ f.resultado_esperado.id_for_label }}">Resultado esperado</label>{{ f.resultado_esperado }}{% for e in f.resultado_esperado.errors %}<small class="error">{{ e }}</small>{% endfor %}</div>
+  </div>
+  <div class="paso-controles">
+    <button type="button" class="boton-icono boton-chico" data-mover-paso="-1" title="Subir" aria-label="Subir paso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 15l-6-6-6 6"/></svg></button>
+    <button type="button" class="boton-icono boton-chico" data-mover-paso="1" title="Bajar" aria-label="Bajar paso"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <label class="boton-icono boton-chico eliminar-paso" title="Eliminar paso">{{ f.DELETE }}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg><span class="solo-lector">Eliminar paso</span></label>
+  </div>
+</li>

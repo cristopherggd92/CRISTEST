@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block encabezado %}Inicio{% endblock %}
+{% block contenido %}
+<div class="tarjetas-kpi">
+  <a class="tarjeta kpi" href="{% url 'pruebas:lista' 'casos' %}"><span class="kpi-etiqueta">Casos de prueba</span><span class="kpi-valor">{{ total_casos }}</span></a>
+  <a class="tarjeta kpi" href="{% url 'pruebas:lista' 'planes' %}"><span class="kpi-etiqueta">Planes de prueba</span><span class="kpi-valor">{{ total_planes }}</span></a>
+  <a class="tarjeta kpi" href="{% url 'pruebas:lista' 'ciclos' %}"><span class="kpi-etiqueta">Ciclos de prueba</span><span class="kpi-valor">{{ total_ciclos }}</span></a>
+  <div class="tarjeta kpi"><span class="kpi-etiqueta">Tasa de éxito</span><span class="kpi-valor">{% if porcentaje_exito is None %}—{% else %}{{ porcentaje_exito }} %{% endif %}</span></div>
+</div>
+
+<div class="rejilla-inicio">
+  <section class="panel">
+    <div class="panel-encabezado"><h2>Ejecuciones por estatus</h2><span class="texto-tenue">{{ total_ejecuciones }}</span></div>
+    {% if total_ejecuciones %}
+    <div class="resumen-estatus">
+      {% for fila in resumen %}{% if fila.total %}<div class="resumen-item"><span class="punto color-{{ fila.estatus.color|default:'gris' }}"></span>{{ fila.estatus.nombre|default:"Sin estatus" }} <strong>{{ fila.total }}</strong></div>{% endif %}{% endfor %}
+    </div>
+    {% else %}<p class="texto-tenue">Aún no hay ejecuciones.</p>{% endif %}
+  </section>
+  <section class="panel">
+    <div class="panel-encabezado"><h2>Mis pendientes</h2></div>
+    {% if mis_pendientes %}
+    <ul class="lista-simple">{% for e in mis_pendientes %}
+      <li><a href="{% url 'pruebas:ejecutar' e.pk %}"><span class="mono">{{ e.caso.codigo }}</span> {{ e.caso.titulo }}</a><span class="texto-tenue">{{ e.ciclo }}</span></li>
+    {% endfor %}</ul>
+    {% else %}<p class="texto-tenue">No tienes ejecuciones pendientes asignadas.</p>{% endif %}
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-encabezado"><h2>Ciclos recientes</h2></div>
+  {% if ciclos_recientes %}
+  <ul class="lista-simple">
+    {% for ciclo in ciclos_recientes %}
+      <li>
+        <a href="{% url 'pruebas:detalle' 'ciclos' ciclo.pk %}">{{ ciclo.nombre }}{% if ciclo.version %} <span class="mono texto-tenue">{{ ciclo.version }}</span>{% endif %}</a>
+        <span class="nowrap">{% include "pruebas/_insignia.html" with e=ciclo.estatus %} {% include "pruebas/ciclos/_progreso.html" with p=ciclo.progreso %}</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p class="texto-tenue">Aún no hay ciclos. <a href="{% url 'pruebas:nuevo' 'ciclos' %}">Crea el primero</a>.</p>
+  {% endif %}
+</section>
+{% endblock %}

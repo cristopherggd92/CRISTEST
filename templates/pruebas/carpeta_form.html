@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}{% if carpeta %}Editar carpeta{% else %}Nueva carpeta{% endif %}{% endblock %}
+{% block migas %}<nav class="migas"><a href="{% url 'pruebas:lista' seccion %}">{{ s.titulo }}</a></nav>{% endblock %}
+{% block encabezado %}{% if carpeta %}Editar carpeta{% else %}Nueva carpeta{% endif %}{% endblock %}
+{% block contenido %}
+<form class="panel formulario formulario-angosto" method="post" novalidate>
+  {% csrf_token %}
+  {% for campo in form %}{% include "pruebas/_campo.html" %}{% endfor %}
+  <div class="formulario-acciones">
+    <button class="boton boton-primario" type="submit">Guardar</button>
+    <a class="boton boton-sutil" href="{% url 'pruebas:lista' seccion %}{% if carpeta %}?carpeta={{ carpeta.pk }}{% endif %}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

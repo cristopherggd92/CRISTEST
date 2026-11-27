@@ -1,0 +1,30 @@
+{% extends "pruebas/_seccion.html" %}
+{% block titulo %}Casos de Prueba{% endblock %}
+{% block encabezado %}Casos de Prueba{% endblock %}
+{% block lista %}
+<div class="panel-encabezado">
+  <h2>Todos los casos</h2>
+  <button class="boton boton-primario" type="button" disabled title="Disponible en el paso 2">+ Nuevo caso</button>
+</div>
+{% if elementos %}
+<div class="tabla-envoltura">
+<table class="tabla">
+  <thead><tr><th>Código</th><th>Título</th><th>Carpeta</th><th>Prioridad</th><th>Tipo</th><th>Estado</th></tr></thead>
+  <tbody>
+  {% for caso in elementos %}
+    <tr>
+      <td class="mono">{{ caso.codigo }}</td>
+      <td>{{ caso.titulo }}</td>
+      <td class="texto-tenue">{{ caso.carpeta.nombre|default:"—" }}</td>
+      <td><span class="insignia prioridad-{{ caso.prioridad }}">{{ caso.get_prioridad_display }}</span></td>
+      <td>{{ caso.get_tipo_display }}</td>
+      <td><span class="insignia estado-{{ caso.estado }}">{{ caso.get_estado_display }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  {% include "pruebas/_vacio.html" with texto="Todavía no hay casos de prueba." %}
+{% endif %}
+{% endblock %}

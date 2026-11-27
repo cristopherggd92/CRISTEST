@@ -1,0 +1,27 @@
+{% extends "pruebas/_detalle.html" %}
+{% block principal %}
+<section class="panel">
+  <div class="panel-encabezado"><h2>{{ obj.get_tipo_display }} por {{ obj.get_agrupar_por_display|lower }}</h2><span class="texto-tenue">Total: {{ total }}</span></div>
+  {% if obj.descripcion %}<p class="texto-tenue">{{ obj.descripcion }}</p>{% endif %}
+  {% if resultados %}
+  <div class="grafica-barras">
+    {% for f in resultados %}
+      <div class="barra-fila">
+        <span class="barra-etiqueta">{{ f.etiqueta }}</span>
+        <span class="barra-pista"><span class="barra-valor color-{{ f.color }}" style="width: {{ f.porcentaje }}%"></span></span>
+        <span class="barra-numero">{{ f.total }} <small class="texto-tenue">({{ f.porcentaje }} %)</small></span>
+      </div>
+    {% endfor %}
+  </div>
+  {% else %}<p class="texto-tenue">No hay datos con estos filtros.</p>{% endif %}
+</section>
+{% endblock %}
+{% block propiedades %}
+<dt>Tipo</dt><dd>{{ obj.get_tipo_display }}</dd>
+<dt>Agrupar por</dt><dd>{{ obj.get_agrupar_por_display }}</dd>
+<dt>Plan</dt><dd>{{ obj.plan|default:"Todos" }}</dd>
+<dt>Ciclo</dt><dd>{{ obj.ciclo|default:"Todos" }}</dd>
+<dt>Entorno</dt><dd>{{ obj.entorno|default:"Todos" }}</dd>
+<dt>Componente</dt><dd>{{ obj.componente|default:"Todos" }}</dd>
+<dt>Carpeta</dt><dd>{{ obj.carpeta.ruta|default:"—" }}</dd>
+{% endblock %}

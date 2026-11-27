@@ -1,0 +1,19 @@
+{% extends "pruebas/_seccion.html" %}
+{% block tabla %}
+<table class="tabla">
+  <thead><tr><th>Código</th><th>Nombre</th><th>Carpeta</th><th>Casos</th><th>Estatus</th><th>Asignado</th><th>Fechas</th></tr></thead>
+  <tbody>
+  {% for plan in elementos %}
+    <tr>
+      <td class="mono"><a href="{% url 'pruebas:detalle' 'planes' plan.pk %}">{{ plan.codigo }}</a></td>
+      <td><a class="enlace-fila" href="{% url 'pruebas:detalle' 'planes' plan.pk %}">{{ plan.nombre }}</a></td>
+      <td class="texto-tenue">{{ plan.carpeta.nombre|default:"—" }}</td>
+      <td>{{ plan.total_casos }}</td>
+      <td>{% include "pruebas/_insignia.html" with e=plan.estatus %}</td>
+      <td>{{ plan.asignado.get_username|default:"—" }}</td>
+      <td class="texto-tenue">{{ plan.fecha_inicio|date:"d/m/Y"|default:"—" }} – {{ plan.fecha_fin|date:"d/m/Y"|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

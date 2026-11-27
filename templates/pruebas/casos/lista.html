@@ -1,0 +1,19 @@
+{% extends "pruebas/_seccion.html" %}
+{% block tabla %}
+<table class="tabla">
+  <thead><tr><th>Código</th><th>Título</th><th>Carpeta</th><th>Prioridad</th><th>Estatus</th><th>Componente</th><th>Asignado</th></tr></thead>
+  <tbody>
+  {% for caso in elementos %}
+    <tr class="fila-enlace">
+      <td class="mono"><a href="{% url 'pruebas:detalle' 'casos' caso.pk %}">{{ caso.codigo }}</a></td>
+      <td><a class="enlace-fila" href="{% url 'pruebas:detalle' 'casos' caso.pk %}">{{ caso.titulo }}</a>{% if caso.tipo == "automatizado" %} <span class="insignia color-morado">Auto</span>{% endif %}</td>
+      <td class="texto-tenue">{{ caso.carpeta.nombre|default:"—" }}</td>
+      <td>{% include "pruebas/_insignia.html" with e=caso.prioridad %}</td>
+      <td>{% include "pruebas/_insignia.html" with e=caso.estatus %}</td>
+      <td>{{ caso.componente.nombre|default:"—" }}</td>
+      <td>{{ caso.asignado.get_username|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

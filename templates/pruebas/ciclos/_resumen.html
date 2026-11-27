@@ -1,0 +1,8 @@
+<section class="panel" id="resumen-ciclo"{% if oob %} hx-swap-oob="true"{% endif %}>
+  <div class="panel-encabezado"><h2>Avance</h2>{% include "pruebas/ciclos/_progreso.html" with p=obj.progreso %}</div>
+  <div class="resumen-estatus">
+    {% for fila in resumen %}{% if fila.total or fila.estatus %}
+      <div class="resumen-item"><span class="punto color-{{ fila.estatus.color|default:'gris' }}"></span>{{ fila.estatus.nombre|default:"Sin estatus" }} <strong>{{ fila.total }}</strong></div>
+    {% endif %}{% endfor %}
+  </div>
+</section>

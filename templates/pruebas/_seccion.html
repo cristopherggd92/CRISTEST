@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}{{ s.titulo }}{% endblock %}
+{% block encabezado %}{{ s.titulo }}{% endblock %}
+{% block contenido %}
+<div class="seccion">
+  <aside class="panel panel-arbol" aria-label="Carpetas">
+    <div class="panel-encabezado">
+      <h2>Carpetas</h2>
+      <a class="boton boton-sutil boton-chico" href="{% url 'pruebas:carpeta_nueva' seccion %}">+ Nueva</a>
+    </div>
+    <div class="arbol">
+      <div class="nodo nodo-hoja nodo-fila{% if not carpeta_actual and not sin_carpeta %} seleccionado{% endif %}">
+        <a class="nodo-enlace" href="{% url 'pruebas:lista' seccion %}"><span class="nodo-nombre">Todos</span></a>
+      </div>
+      {% include "pruebas/_arbol.html" with nodos=arbol %}
+      <div class="nodo nodo-hoja nodo-fila{% if sin_carpeta %} seleccionado{% endif %}">
+        <a class="nodo-enlace" href="?sin_carpeta=1"><span class="nodo-nombre texto-tenue">Sin carpeta</span></a>
+      </div>
+    </div>
+  </aside>
+  <section class="panel panel-lista">
+    <div class="panel-encabezado">
+      <h2>{% if carpeta_actual %}{{ carpeta_actual.ruta }}{% elif sin_carpeta %}Sin carpeta{% else %}Todos{% endif %} <span class="texto-tenue">({{ total }})</span></h2>
+      <a class="boton boton-primario" href="{% url 'pruebas:nuevo' seccion %}{% if carpeta_actual %}?carpeta={{ carpeta_actual.pk }}{% endif %}">+ {{ s.nuevo }}</a>
+    </div>
+    <form class="filtros" method="get">
+      {% if carpeta_actual %}<input type="hidden" name="carpeta" value="{{ carpeta_actual.pk }}">{% endif %}
+      {% if sin_carpeta %}<input type="hidden" name="sin_carpeta" value="1">{% endif %}
+      <input type="search" name="q" value="{{ q }}" placeholder="Buscar…" aria-label="Buscar">
+      {% if filtros.estatus %}
+      <select name="estatus" aria-label="Estatus">
+        <option value="">Todos los estatus</option>
+        {% for e in filtros.estatus %}<option value="{{ e.pk }}"{% if estatus_sel == e.pk|stringformat:"s" %} selected{% endif %}>{{ e.nombre }}</option>{% endfor %}
+      </select>
+      <select name="asignado" aria-label="Asignado a">
+        <option value="">Cualquier asignado</option>
+        {% for u in filtros.usuarios %}<option value="{{ u.pk }}"{% if asignado_sel == u.pk|stringformat:"s" %} selected{% endif %}>{{ u.get_username }}</option>{% endfor %}
+      </select>
+      {% endif %}
+      <button class="boton boton-sutil" type="submit">Filtrar</button>
+      {% if q or estatus_sel or asignado_sel %}<a class="enlace-sutil" href="?{% if carpeta_actual %}carpeta={{ carpeta_actual.pk }}{% endif %}">Limpiar</a>{% endif %}
+    </form>
+    {% if elementos %}
+      <div class="tabla-envoltura">{% block tabla %}{% endblock %}</div>
+    {% else %}
+      <div class="vacio">
+        <p>No hay {{ s.titulo|lower }} aquí{% if q or estatus_sel or asignado_sel %} con esos filtros{% endif %}.</p>
+        <p><a href="{% url 'pruebas:nuevo' seccion %}{% if carpeta_actual %}?carpeta={{ carpeta_actual.pk }}{% endif %}">Crear {{ s.singular }}</a></p>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% for carpeta in nodos %}
+  {% if carpeta.hijos %}
+    <details class="nodo" open>
+      <summary class="nodo-fila{% if carpeta_actual.pk == carpeta.pk %} seleccionado{% endif %}">
+        {% include "pruebas/_nodo.html" %}
+      </summary>
+      <div class="nodo-hijos">{% include "pruebas/_arbol.html" with nodos=carpeta.hijos %}</div>
+    </details>
+  {% else %}
+    <div class="nodo nodo-hoja nodo-fila{% if carpeta_actual.pk == carpeta.pk %} seleccionado{% endif %}">
+      {% include "pruebas/_nodo.html" %}
+    </div>
+  {% endif %}
+{% endfor %}

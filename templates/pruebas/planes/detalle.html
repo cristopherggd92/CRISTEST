@@ -1,0 +1,35 @@
+{% extends "pruebas/_detalle.html" %}
+{% block principal %}
+{% if obj.descripcion %}<section class="panel"><h2>Descripción / alcance</h2><p class="texto-largo">{{ obj.descripcion|linebreaksbr }}</p></section>{% endif %}
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2>Casos del plan ({{ casos|length }})</h2>
+    <a class="boton boton-primario" href="{% url 'pruebas:agregar_casos' 'planes' obj.pk %}">+ Agregar casos</a>
+  </div>
+  {% if casos %}
+  <div class="tabla-envoltura"><table class="tabla">
+    <thead><tr><th>Código</th><th>Título</th><th>Prioridad</th><th>Estatus</th><th></th></tr></thead>
+    <tbody>{% for c in casos %}
+      <tr><td class="mono"><a href="{% url 'pruebas:detalle' 'casos' c.pk %}">{{ c.codigo }}</a></td><td>{{ c.titulo }}</td>
+      <td>{% include "pruebas/_insignia.html" with e=c.prioridad %}</td><td>{% include "pruebas/_insignia.html" with e=c.estatus %}</td>
+      <td class="derecha"><form method="post" action="{% url 'pruebas:quitar_caso' 'planes' obj.pk c.pk %}">{% csrf_token %}<button class="boton-texto" type="submit">Quitar</button></form></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="texto-tenue">Agrega casos de prueba a este plan.</p>{% endif %}
+</section>
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2>Ciclos de este plan</h2>
+    <a class="boton boton-sutil" href="{% url 'pruebas:nuevo' 'ciclos' %}">+ Nuevo ciclo</a>
+  </div>
+  {% if ciclos %}
+  <ul class="lista-simple">{% for c in ciclos %}
+    <li><a href="{% url 'pruebas:detalle' 'ciclos' c.pk %}">{{ c.nombre }}</a> <span>{% include "pruebas/_insignia.html" with e=c.estatus %} {% include "pruebas/ciclos/_progreso.html" with p=c.progreso %}</span></li>
+  {% endfor %}</ul>
+  {% else %}<p class="texto-tenue">Aún no hay ciclos que ejecuten este plan.</p>{% endif %}
+</section>
+{% endblock %}
+{% block propiedades %}
+{% include "pruebas/_props_comunes.html" %}
+<dt>Fechas</dt><dd>{% if obj.fecha_inicio or obj.fecha_fin %}{{ obj.fecha_inicio|date:"d/m/Y"|default:"—" }} – {{ obj.fecha_fin|date:"d/m/Y"|default:"—" }}{% else %}—{% endif %}</dd>
+{% endblock %}

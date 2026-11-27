@@ -1,0 +1,13 @@
+<a class="nodo-enlace" href="?carpeta={{ carpeta.pk }}">
+  <span class="carpeta-icono" aria-hidden="true"></span>
+  <span class="nodo-nombre">{{ carpeta.nombre }}</span>
+  <span class="contador" title="Elementos en esta carpeta y sus subcarpetas">{{ carpeta.total_con_hijos }}</span>
+</a>
+<span class="nodo-acciones">
+  <a href="{% url 'pruebas:carpeta_nueva' seccion %}?carpeta={{ carpeta.pk }}" title="Nueva subcarpeta" aria-label="Nueva subcarpeta en {{ carpeta.nombre }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
+  <a href="{% url 'pruebas:carpeta_editar' carpeta.pk %}" title="Renombrar o mover" aria-label="Editar carpeta {{ carpeta.nombre }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4z"/></svg></a>
+  <a href="{% url 'pruebas:carpeta_eliminar' carpeta.pk %}" title="Eliminar" aria-label="Eliminar carpeta {{ carpeta.nombre }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></a>
+</span>
