@@ -1,0 +1,30 @@
+{% extends "pruebas/_seccion.html" %}
+{% block titulo %}Planes de Prueba{% endblock %}
+{% block encabezado %}Planes de Prueba{% endblock %}
+{% block lista %}
+<div class="panel-encabezado">
+  <h2>Todos los planes</h2>
+  <button class="boton boton-primario" type="button" disabled title="Disponible en el paso 2">+ Nuevo plan</button>
+</div>
+{% if elementos %}
+<div class="tabla-envoltura">
+<table class="tabla">
+  <thead><tr><th>Nombre</th><th>Carpeta</th><th>Casos</th><th>Estado</th><th>Inicio</th><th>Fin</th></tr></thead>
+  <tbody>
+  {% for plan in elementos %}
+    <tr>
+      <td>{{ plan.nombre }}</td>
+      <td class="texto-tenue">{{ plan.carpeta.nombre|default:"—" }}</td>
+      <td>{{ plan.total_casos }}</td>
+      <td><span class="insignia estado-{{ plan.estado }}">{{ plan.get_estado_display }}</span></td>
+      <td>{{ plan.fecha_inicio|date:"d/m/Y"|default:"—" }}</td>
+      <td>{{ plan.fecha_fin|date:"d/m/Y"|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  {% include "pruebas/_vacio.html" with texto="Todavía no hay planes de prueba." %}
+{% endif %}
+{% endblock %}

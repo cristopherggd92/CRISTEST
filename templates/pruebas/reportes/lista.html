@@ -1,0 +1,17 @@
+{% extends "pruebas/_seccion.html" %}
+{% block tabla %}
+<table class="tabla">
+  <thead><tr><th>Nombre</th><th>Tipo</th><th>Agrupado por</th><th>Filtros</th><th>Carpeta</th></tr></thead>
+  <tbody>
+  {% for r in elementos %}
+    <tr>
+      <td><a class="enlace-fila" href="{% url 'pruebas:detalle' 'reportes' r.pk %}">{{ r.nombre }}</a></td>
+      <td>{{ r.get_tipo_display }}</td>
+      <td>{{ r.get_agrupar_por_display }}</td>
+      <td class="texto-tenue">{% if r.plan %}Plan: {{ r.plan }} {% endif %}{% if r.ciclo %}Ciclo: {{ r.ciclo }}{% endif %}{% if not r.plan and not r.ciclo %}Todos{% endif %}</td>
+      <td class="texto-tenue">{{ r.carpeta.nombre|default:"—" }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

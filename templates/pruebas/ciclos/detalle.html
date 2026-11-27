@@ -1,0 +1,44 @@
+{% extends "pruebas/_detalle.html" %}
+{% block principal %}
+{% include "pruebas/ciclos/_resumen.html" %}
+<section class="panel">
+  <div class="panel-encabezado">
+    <h2>Ejecuciones ({{ ejecuciones|length }})</h2>
+    <div class="grupo-botones">
+      {% if obj.plan %}<form method="post" action="{% url 'pruebas:cargar_plan' obj.pk %}">{% csrf_token %}<button class="boton boton-sutil" type="submit">Cargar casos del plan</button></form>{% endif %}
+      <a class="boton boton-primario" href="{% url 'pruebas:agregar_casos' 'ciclos' obj.pk %}">+ Agregar casos</a>
+    </div>
+  </div>
+  {% if ejecuciones %}
+  <div class="tabla-envoltura"><table class="tabla">
+    <thead><tr><th>Código</th><th>Caso</th><th>Prioridad</th><th>Estatus</th><th>Asignado</th><th></th></tr></thead>
+    <tbody>{% for e in ejecuciones %}
+      <tr>
+        <td class="mono"><a href="{% url 'pruebas:detalle' 'casos' e.caso_id %}">{{ e.caso.codigo }}</a></td>
+        <td>{{ e.caso.titulo }}</td>
+        <td>{% include "pruebas/_insignia.html" with e=e.caso.prioridad %}</td>
+        <td>
+          <select class="selector-estatus color-{{ e.estatus.color|default:'gris' }}" name="estatus" aria-label="Estatus de {{ e.caso.codigo }}"
+                  hx-post="{% url 'pruebas:estatus_ejecucion' e.pk %}" hx-trigger="change" hx-swap="none"
+                  data-colores="{% for st in estatus_ejecucion %}{{ st.pk }}:{{ st.color }}{% if not forloop.last %},{% endif %}{% endfor %}">
+            {% for st in estatus_ejecucion %}<option value="{{ st.pk }}"{% if st.pk == e.estatus_id %} selected{% endif %}>{{ st.nombre }}</option>{% endfor %}
+          </select>
+        </td>
+        <td>{{ e.asignado.get_username|default:"—" }}</td>
+        <td class="derecha nowrap">
+          <a class="boton boton-sutil boton-chico" href="{% url 'pruebas:ejecutar' e.pk %}">Ejecutar</a>
+          <form class="en-linea" method="post" action="{% url 'pruebas:quitar_caso' 'ciclos' obj.pk e.caso_id %}">{% csrf_token %}<button class="boton-texto" type="submit">Quitar</button></form>
+        </td>
+      </tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="texto-tenue">Agrega casos a este ciclo{% if obj.plan %} o carga los del plan «{{ obj.plan }}»{% endif %}.</p>{% endif %}
+</section>
+{% endblock %}
+{% block propiedades %}
+{% include "pruebas/_props_comunes.html" %}
+<dt>Plan</dt><dd>{% if obj.plan %}<a href="{% url 'pruebas:detalle' 'planes' obj.plan.pk %}">{{ obj.plan }}</a>{% else %}—{% endif %}</dd>
+<dt>Versión / build</dt><dd class="mono">{{ obj.version|default:"—" }}</dd>
+<dt>Entorno</dt><dd>{{ obj.entorno.nombre|default:"—" }}</dd>
+<dt>Fechas</dt><dd>{% if obj.fecha_inicio or obj.fecha_fin %}{{ obj.fecha_inicio|date:"d/m/Y"|default:"—" }} – {{ obj.fecha_fin|date:"d/m/Y"|default:"—" }}{% else %}—{% endif %}</dd>
+{% endblock %}

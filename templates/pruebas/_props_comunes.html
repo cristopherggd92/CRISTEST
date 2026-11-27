@@ -1,0 +1,6 @@
+<dt>Estatus</dt><dd>{% include "pruebas/_insignia.html" with e=obj.estatus %}</dd>
+<dt>Asignado a</dt><dd>{{ obj.asignado.get_username|default:"—" }}</dd>
+<dt>Carpeta</dt><dd>{{ obj.carpeta.ruta|default:"—" }}</dd>
+{% if obj.etiquetas %}{% with etiquetas=obj.etiquetas.all %}{% if etiquetas %}
+<dt>Etiquetas</dt><dd class="etiquetas">{% for e in etiquetas %}{% include "pruebas/_insignia.html" %}{% endfor %}</dd>
+{% endif %}{% endwith %}{% endif %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titulo %}Configuración{% endblock %}
+{% block encabezado %}Configuración{% endblock %}
+{% block contenido %}
+<div class="config">
+  <nav class="panel config-menu" aria-label="Configuración">
+    {% for grupo, elementos in menu %}
+      <h3>{{ grupo }}</h3>
+      {% for c in elementos %}<a href="{% url 'pruebas:config_lista' c.clave %}" class="{% if c.clave == d.clave %}activo{% endif %}">{{ c.titulo }}</a>{% endfor %}
+    {% endfor %}
+  </nav>
+  <section class="panel">{% block config %}{% endblock %}</section>
+</div>
+{% endblock %}

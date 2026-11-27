@@ -1,0 +1,14 @@
+{% if pasos %}
+<ol class="pasos">
+  {% for p in pasos %}
+  <li class="paso">
+    <span class="paso-numero">{{ forloop.counter }}</span>
+    <div class="paso-cuerpo">
+      <div><span class="paso-etiqueta">Acción</span>{{ p.accion|linebreaksbr }}</div>
+      {% if p.datos %}<div><span class="paso-etiqueta">Datos de prueba</span>{{ p.datos|linebreaksbr }}</div>{% endif %}
+      <div><span class="paso-etiqueta">Resultado esperado</span>{{ p.resultado_esperado|linebreaksbr }}</div>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+{% else %}<p class="texto-tenue">Este caso todavía no tiene pasos.</p>{% endif %}

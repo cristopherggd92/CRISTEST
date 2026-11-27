@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block titulo %}{% if obj %}Editar {{ obj }}{% else %}{{ s.nuevo }}{% endif %}{% endblock %}
+{% block migas %}<nav class="migas"><a href="{% url 'pruebas:lista' seccion %}">{{ s.titulo }}</a>{% if obj %} / <a href="{% url 'pruebas:detalle' seccion obj.pk %}">{{ obj }}</a>{% endif %}</nav>{% endblock %}
+{% block encabezado %}{% if obj %}Editar {{ s.singular }}{% else %}{{ s.nuevo }}{% endif %}{% endblock %}
+{% block contenido %}
+<form class="formulario" method="post" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="mensaje mensaje-error">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <section class="panel">
+    <h2>Datos generales</h2>
+    <div class="rejilla-campos">
+      {% for campo in form.campos_base %}{% include "pruebas/_campo.html" %}{% endfor %}
+    </div>
+  </section>
+
+  {% with extra=form.campos_extra_visibles %}{% if extra %}
+  <section class="panel">
+    <h2>Campos personalizados</h2>
+    <div class="rejilla-campos">{% for campo in extra %}{% include "pruebas/_campo.html" %}{% endfor %}</div>
+  </section>
+  {% endif %}{% endwith %}
+
+  {% if pasos %}
+  <section class="panel">
+    <div class="panel-encabezado"><h2>Pasos</h2><button class="boton boton-sutil" type="button" data-agregar-paso>+ Agregar paso</button></div>
+    {{ pasos.management_form }}
+    {% if pasos.non_form_errors %}<div class="mensaje mensaje-error">{{ pasos.non_form_errors|join:" " }}</div>{% endif %}
+    <ol class="pasos-editables" id="lista-pasos">
+      {% for f in pasos %}{% include "pruebas/casos/_paso_form.html" %}{% endfor %}
+    </ol>
+    <template id="plantilla-paso">{% with f=pasos.empty_form %}{% include "pruebas/casos/_paso_form.html" %}{% endwith %}</template>
+    <p class="texto-tenue" data-sin-pasos {% if pasos.forms %}hidden{% endif %}>Sin pasos. Usa «+ Agregar paso».</p>
+  </section>
+  {% endif %}
+
+  <div class="formulario-acciones pegajoso">
+    <button class="boton boton-primario" type="submit">Guardar</button>
+    {% if not obj %}<button class="boton boton-sutil" type="submit" name="guardar_y_nuevo">Guardar y crear otro</button>{% endif %}
+    <a class="boton boton-sutil" href="{% if obj %}{% url 'pruebas:detalle' seccion obj.pk %}{% else %}{% url 'pruebas:lista' seccion %}{% endif %}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

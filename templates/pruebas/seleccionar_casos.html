@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Agregar casos{% endblock %}
+{% block migas %}<nav class="migas"><a href="{% url 'pruebas:lista' seccion %}">{{ s.titulo }}</a> / <a href="{% url 'pruebas:detalle' seccion obj.pk %}">{{ obj }}</a></nav>{% endblock %}
+{% block encabezado %}Agregar casos a «{{ obj }}»{% endblock %}
+{% block contenido %}
+<section class="panel">
+  <form class="filtros" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="Buscar por título o carpeta…" aria-label="Buscar">
+    <button class="boton boton-sutil" type="submit">Buscar</button>
+  </form>
+  <form method="post">
+    {% csrf_token %}
+    {% if casos %}
+    <div class="tabla-envoltura"><table class="tabla">
+      <thead><tr><th><input type="checkbox" data-marcar-todos aria-label="Seleccionar todos"></th><th>Código</th><th>Título</th><th>Carpeta</th><th>Prioridad</th></tr></thead>
+      <tbody>{% for c in casos %}
+        <tr><td><input type="checkbox" name="casos" value="{{ c.pk }}" aria-label="Seleccionar {{ c.codigo }}"></td>
+        <td class="mono">{{ c.codigo }}</td><td>{{ c.titulo }}</td><td class="texto-tenue">{{ c.carpeta.ruta|default:"—" }}</td>
+        <td>{% include "pruebas/_insignia.html" with e=c.prioridad %}</td></tr>
+      {% endfor %}</tbody>
+    </table></div>
+    {% else %}<p class="texto-tenue">No hay más casos disponibles para agregar.</p>{% endif %}
+    <div class="formulario-acciones">
+      <button class="boton boton-primario" type="submit"{% if not casos %} disabled{% endif %}>Agregar seleccionados</button>
+      <a class="boton boton-sutil" href="{% url 'pruebas:detalle' seccion obj.pk %}">Cancelar</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

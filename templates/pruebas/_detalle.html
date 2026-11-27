@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}{{ obj }}{% endblock %}
+{% block migas %}<nav class="migas" aria-label="Ruta"><a href="{% url 'pruebas:lista' seccion %}">{{ s.titulo }}</a>{% if obj.carpeta %} / <a href="{% url 'pruebas:lista' seccion %}?carpeta={{ obj.carpeta.pk }}">{{ obj.carpeta.ruta }}</a>{% endif %}</nav>{% endblock %}
+{% block encabezado %}{% if obj.codigo %}<span class="mono texto-tenue">{{ obj.codigo }}</span> {% endif %}{% firstof obj.titulo obj.nombre %}{% endblock %}
+{% block contenido %}
+<div class="acciones-detalle">
+  {% block acciones %}{% endblock %}
+  <a class="boton boton-sutil" href="{% url 'pruebas:editar' seccion obj.pk %}">Editar</a>
+  <a class="boton boton-peligro" href="{% url 'pruebas:eliminar' seccion obj.pk %}">Eliminar</a>
+</div>
+<div class="detalle">
+  <div class="detalle-principal">{% block principal %}{% endblock %}</div>
+  <aside class="panel detalle-lateral">
+    <dl class="propiedades">
+      {% block propiedades %}{% endblock %}
+      {% if obj.valores_personalizados %}
+        {% for campo, valor in obj.valores_personalizados %}
+          <dt>{{ campo.nombre }}</dt>
+          <dd>{% if campo.tipo == "casilla" %}{{ valor|yesno:"Sí,No" }}{% else %}{{ valor|default:"—" }}{% endif %}</dd>
+        {% endfor %}
+      {% endif %}
+      {% if obj.autor %}<dt>Creado por</dt><dd>{{ obj.autor.get_username }}</dd>{% endif %}
+      <dt>Creado</dt><dd>{{ obj.creado|date:"d/m/Y H:i" }}</dd>
+      <dt>Actualizado</dt><dd>{{ obj.actualizado|date:"d/m/Y H:i" }}</dd>
+    </dl>
+  </aside>
+</div>
+{% endblock %}

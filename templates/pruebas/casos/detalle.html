@@ -1,0 +1,34 @@
+{% extends "pruebas/_detalle.html" %}
+{% block acciones %}
+<form method="post" action="{% url 'pruebas:duplicar_caso' obj.pk %}">{% csrf_token %}<button class="boton boton-sutil" type="submit">Duplicar</button></form>
+{% endblock %}
+{% block principal %}
+<section class="panel">
+  {% if obj.objetivo %}<h2>Objetivo</h2><p class="texto-largo">{{ obj.objetivo|linebreaksbr }}</p>{% endif %}
+  {% if obj.precondiciones %}<h2>Precondiciones</h2><p class="texto-largo">{{ obj.precondiciones|linebreaksbr }}</p>{% endif %}
+  {% if not obj.objetivo and not obj.precondiciones %}<p class="texto-tenue">Sin objetivo ni precondiciones.</p>{% endif %}
+</section>
+<section class="panel">
+  <div class="panel-encabezado"><h2>Pasos ({{ obj.pasos.count }})</h2></div>
+  {% include "pruebas/casos/_pasos.html" with pasos=obj.pasos.all %}
+</section>
+{% with ejecuciones=obj.ejecuciones.all %}{% if ejecuciones %}
+<section class="panel">
+  <div class="panel-encabezado"><h2>Historial de ejecución</h2></div>
+  <table class="tabla">
+    <thead><tr><th>Ciclo</th><th>Estatus</th><th>Ejecutado por</th><th>Fecha</th></tr></thead>
+    <tbody>{% for e in ejecuciones %}
+      <tr><td><a href="{% url 'pruebas:detalle' 'ciclos' e.ciclo_id %}">{{ e.ciclo }}</a></td>
+      <td>{% include "pruebas/_insignia.html" with e=e.estatus %}</td>
+      <td>{{ e.ejecutado_por.get_username|default:"—" }}</td><td>{{ e.fecha_ejecucion|date:"d/m/Y H:i"|default:"—" }}</td></tr>
+    {% endfor %}</tbody>
+  </table>
+</section>
+{% endif %}{% endwith %}
+{% endblock %}
+{% block propiedades %}
+{% include "pruebas/_props_comunes.html" %}
+<dt>Prioridad</dt><dd>{% include "pruebas/_insignia.html" with e=obj.prioridad %}</dd>
+<dt>Componente</dt><dd>{{ obj.componente.nombre|default:"—" }}</dd>
+<dt>Tipo</dt><dd>{{ obj.get_tipo_display }}</dd>
+{% endblock %}

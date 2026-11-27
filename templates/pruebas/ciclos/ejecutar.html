@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Ejecutar {{ ejecucion.caso.codigo }}{% endblock %}
+{% block migas %}<nav class="migas"><a href="{% url 'pruebas:lista' 'ciclos' %}">Ciclos de Prueba</a> / <a href="{% url 'pruebas:detalle' 'ciclos' ejecucion.ciclo_id %}">{{ ejecucion.ciclo }}</a></nav>{% endblock %}
+{% block encabezado %}<span class="mono texto-tenue">{{ ejecucion.caso.codigo }}</span> {{ ejecucion.caso.titulo }}{% endblock %}
+{% block contenido %}
+<div class="detalle">
+  <div class="detalle-principal">
+    {% if ejecucion.caso.precondiciones %}<section class="panel"><h2>Precondiciones</h2><p class="texto-largo">{{ ejecucion.caso.precondiciones|linebreaksbr }}</p></section>{% endif %}
+    <section class="panel"><h2>Pasos</h2>{% include "pruebas/casos/_pasos.html" with pasos=ejecucion.caso.pasos.all %}</section>
+  </div>
+  <form class="panel detalle-lateral formulario" method="post">
+    {% csrf_token %}
+    <h2>Resultado</h2>
+    {% for campo in form %}{% include "pruebas/_campo.html" %}{% endfor %}
+    <div class="formulario-acciones">
+      <button class="boton boton-primario" type="submit">Guardar</button>
+      <button class="boton boton-sutil" type="submit" name="siguiente">Guardar y siguiente pendiente</button>
+    </div>
+    {% if ejecucion.ejecutado_por %}<p class="texto-tenue">Última ejecución: {{ ejecucion.ejecutado_por.get_username }}, {{ ejecucion.fecha_ejecucion|date:"d/m/Y H:i" }}</p>{% endif %}
+  </form>
+</div>
+{% endblock %}

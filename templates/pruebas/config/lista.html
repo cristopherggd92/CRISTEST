@@ -1,0 +1,25 @@
+{% extends "pruebas/config/_base.html" %}
+{% block config %}
+<div class="panel-encabezado">
+  <div><h2 class="titulo-config">{{ titulo }}</h2>{% if d.ayuda %}<p class="texto-tenue">{{ d.ayuda }}</p>{% endif %}</div>
+  <a class="boton boton-primario" href="{% url 'pruebas:config_nuevo' d.clave %}">+ Agregar</a>
+</div>
+{% if filas %}
+<div class="tabla-envoltura"><table class="tabla">
+  <thead><tr>{% for h in encabezados %}<th>{{ h|capfirst }}</th>{% endfor %}<th></th></tr></thead>
+  <tbody>{% for fila in filas %}
+    <tr>
+      {% for c in fila.celdas %}<td>
+        {% if c.tipo == "color" %}<span class="insignia color-{{ c.valor }}">{{ c.texto }}</span>
+        {% elif c.tipo == "bool" %}{% if c.valor %}<span class="si">Sí</span>{% else %}<span class="texto-tenue">No</span>{% endif %}
+        {% else %}{% if forloop.first %}<a href="{% url 'pruebas:config_editar' d.clave fila.obj.pk %}">{{ c.valor }}</a>{% else %}{{ c.valor|default:"—" }}{% endif %}{% endif %}
+      </td>{% endfor %}
+      <td class="derecha nowrap">
+        <a class="boton-texto" href="{% url 'pruebas:config_editar' d.clave fila.obj.pk %}">Editar</a>
+        <a class="boton-texto peligro" href="{% url 'pruebas:config_eliminar' d.clave fila.obj.pk %}">Eliminar</a>
+      </td>
+    </tr>
+  {% endfor %}</tbody>
+</table></div>
+{% else %}<div class="vacio"><p>Aún no hay registros.</p></div>{% endif %}
+{% endblock %}

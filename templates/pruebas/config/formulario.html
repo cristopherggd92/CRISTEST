@@ -1,0 +1,13 @@
+{% extends "pruebas/config/_base.html" %}
+{% block config %}
+<h2 class="titulo-config">{{ titulo }} · {% if obj %}Editar «{{ obj }}»{% else %}Agregar{% endif %}</h2>
+<form class="formulario formulario-angosto" method="post" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="mensaje mensaje-error">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  {% for campo in form %}{% include "pruebas/_campo.html" %}{% endfor %}
+  <div class="formulario-acciones">
+    <button class="boton boton-primario" type="submit">Guardar</button>
+    <a class="boton boton-sutil" href="{% url 'pruebas:config_lista' d.clave %}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

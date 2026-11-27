@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block titulo %}Eliminar {{ obj }}{% endblock %}
+{% block migas %}<nav class="migas"><a href="{% url 'pruebas:lista' seccion %}">{{ s.titulo }}</a></nav>{% endblock %}
+{% block encabezado %}Eliminar {% if es_carpeta %}carpeta{% else %}{{ s.singular }}{% endif %}{% endblock %}
+{% block contenido %}
+<form class="panel confirmacion" method="post">
+  {% csrf_token %}
+  <p>¿Seguro que quieres eliminar <strong>«{% if es_carpeta %}{{ obj.ruta }}{% else %}{{ obj }}{% endif %}»</strong>? Esta acción no se puede deshacer.</p>
+  {% if es_carpeta %}
+    {% if subcarpetas %}<p>También se eliminarán sus <strong>{{ subcarpetas }}</strong> subcarpeta(s).</p>{% endif %}
+    {% if afectados %}<p>Los <strong>{{ afectados }}</strong> elemento(s) que contiene no se borran: quedarán en «Sin carpeta».</p>{% endif %}
+  {% elif seccion == "casos" %}
+    <p class="texto-tenue">También se eliminarán sus pasos y sus resultados en los ciclos.</p>
+  {% elif seccion == "ciclos" %}
+    <p class="texto-tenue">También se eliminarán todas sus ejecuciones.</p>
+  {% endif %}
+  <div class="formulario-acciones">
+    <button class="boton boton-peligro-solido" type="submit">Sí, eliminar</button>
+    <a class="boton boton-sutil" href="{{ cancelar }}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
