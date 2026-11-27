@@ -1,0 +1,30 @@
+{% extends "pruebas/_seccion.html" %}
+{% block titulo %}Ciclos de Prueba{% endblock %}
+{% block encabezado %}Ciclos de Prueba{% endblock %}
+{% block lista %}
+<div class="panel-encabezado">
+  <h2>Todos los ciclos</h2>
+  <button class="boton boton-primario" type="button" disabled title="Disponible en el paso 2">+ Nuevo ciclo</button>
+</div>
+{% if elementos %}
+<div class="tabla-envoltura">
+<table class="tabla">
+  <thead><tr><th>Nombre</th><th>Plan</th><th>Versión</th><th>Entorno</th><th>Estado</th><th>Progreso</th></tr></thead>
+  <tbody>
+  {% for ciclo in elementos %}
+    <tr>
+      <td>{{ ciclo.nombre }}</td>
+      <td class="texto-tenue">{{ ciclo.plan.nombre|default:"—" }}</td>
+      <td class="mono">{{ ciclo.version|default:"—" }}</td>
+      <td>{{ ciclo.entorno|default:"—" }}</td>
+      <td><span class="insignia estado-{{ ciclo.estado }}">{{ ciclo.get_estado_display }}</span></td>
+      <td><div class="barra-progreso" role="progressbar" aria-valuenow="{{ ciclo.progreso }}" aria-valuemin="0" aria-valuemax="100"><span style="width: {{ ciclo.progreso }}%"></span></div><small class="texto-tenue">{{ ciclo.progreso }} %</small></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+  {% include "pruebas/_vacio.html" with texto="Todavía no hay ciclos de prueba." %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block contenido %}
+<div class="seccion">
+  <aside class="panel panel-arbol" aria-label="Carpetas">
+    <div class="panel-encabezado">
+      <h2>Carpetas</h2>
+      <button class="boton boton-sutil" type="button" disabled title="Disponible en el paso 2">+ Nueva</button>
+    </div>
+    <div class="arbol">
+      {% if arbol %}
+        {% include "pruebas/_arbol.html" with nodos=arbol %}
+      {% else %}
+        <p class="texto-tenue">Aún no hay carpetas en esta sección.</p>
+      {% endif %}
+    </div>
+  </aside>
+  <section class="panel panel-lista">
+    {% block lista %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

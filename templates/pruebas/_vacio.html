@@ -1,0 +1,4 @@
+<div class="vacio">
+  <p>{{ texto }}</p>
+  <p class="texto-tenue">La creación desde esta pantalla llega en el paso 2.{% if user.is_staff %} Mientras tanto puedes agregar datos desde <a href="{% url 'admin:index' %}">Administración</a>.{% endif %}</p>
+</div>

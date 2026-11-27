@@ -1,0 +1,10 @@
+{% for carpeta in nodos %}
+  {% if carpeta.hijos %}
+    <details class="nodo" open>
+      <summary><span class="carpeta-icono" aria-hidden="true"></span><span class="nodo-nombre">{{ carpeta.nombre }}</span><span class="contador">{{ carpeta.total }}</span></summary>
+      <div class="nodo-hijos">{% include "pruebas/_arbol.html" with nodos=carpeta.hijos %}</div>
+    </details>
+  {% else %}
+    <div class="nodo nodo-hoja"><span class="carpeta-icono" aria-hidden="true"></span><span class="nodo-nombre">{{ carpeta.nombre }}</span><span class="contador">{{ carpeta.total }}</span></div>
+  {% endif %}
+{% endfor %}

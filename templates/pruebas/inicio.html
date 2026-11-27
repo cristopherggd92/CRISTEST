@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titulo %}Inicio{% endblock %}
+{% block encabezado %}Inicio{% endblock %}
+{% block contenido %}
+<div class="tarjetas-kpi">
+  <a class="tarjeta kpi" href="{% url 'pruebas:casos' %}"><span class="kpi-etiqueta">Casos de prueba</span><span class="kpi-valor">{{ total_casos }}</span></a>
+  <a class="tarjeta kpi" href="{% url 'pruebas:planes' %}"><span class="kpi-etiqueta">Planes de prueba</span><span class="kpi-valor">{{ total_planes }}</span></a>
+  <a class="tarjeta kpi" href="{% url 'pruebas:ciclos' %}"><span class="kpi-etiqueta">Ciclos de prueba</span><span class="kpi-valor">{{ total_ciclos }}</span></a>
+  <div class="tarjeta kpi"><span class="kpi-etiqueta">Tasa de aprobación</span><span class="kpi-valor">{% if porcentaje_paso is None %}—{% else %}{{ porcentaje_paso }} %{% endif %}</span></div>
+</div>
+
+<section class="panel">
+  <div class="panel-encabezado"><h2>Ciclos recientes</h2></div>
+  {% if ciclos_recientes %}
+  <ul class="lista-simple">
+    {% for ciclo in ciclos_recientes %}
+      <li>
+        <span>{{ ciclo.nombre }}{% if ciclo.version %} <span class="mono texto-tenue">{{ ciclo.version }}</span>{% endif %}</span>
+        <span class="insignia estado-{{ ciclo.estado }}">{{ ciclo.get_estado_display }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p class="texto-tenue">Aún no hay ciclos. Cuando crees uno, aparecerá aquí con su avance.</p>
+  {% endif %}
+</section>
+{% endblock %}
